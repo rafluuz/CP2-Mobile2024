@@ -41,22 +41,32 @@ const TelaList = ({ navigation }) => {
             </ListItem>
         );
     };
-    return <FlatList data={DadosLivro} renderItem={getLivros} />;
+    
+    return (
+        <View style={styles.container}>
+            <FlatList
+                data={DadosLivro}
+                renderItem={getLivros}
+            />
+            <View style={styles.detailsContainer}>
+                <Text style={styles.detailsText}>Nome: Rafaela Rodrigues | RM551857</Text>
+                <Text style={styles.detailsText}>Nome: Ming Nut Tan | RM99150</Text>
+            </View>
+        </View>
+    );
 };
 
 const styles = StyleSheet.create({
-    listItem: {
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
-        paddingHorizontal: 10,
-        paddingVertical: 15,
+    container: {
+        flex: 1,
     },
-    tituloLivro: {
-        fontSize: 18,
-        fontWeight: 'bold',
+    detailsContainer: {
+        marginTop: 20,
+        alignItems: 'center',
     },
-    autorLivro: {
-        color: 'gray',
+    detailsText: {
+        fontSize: 16,
+        marginBottom: 5,
     },
 });
 

@@ -17,7 +17,7 @@ export default function App() {
                     initialRouteName="TelaList"
                     screenOptions={{
                         headerStyle: {
-                            backgroundColor: "#FF69B4", // Rosa médio
+                            backgroundColor: "#FF69B4", 
                         },
                         headerTintColor: "white",
                         headerTitleStyle: {
