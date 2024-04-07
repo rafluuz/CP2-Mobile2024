@@ -1,37 +1,63 @@
-import {Text} from "@rneui/base";
-import { useState } from "react";
-import {Button, TextInput, View, StyleSheet} from 'react-native'
+import React, { useContext, useState } from "react";
+import { Button, TextInput, View, StyleSheet, Text } from 'react-native';
+import { LivrariaContext } from "../context/LivrariaProvider";
+import { RouteProp } from "@react-navigation/native";
 
+interface Livro {
+    id: number;
+    titulo: string;
+    autor: string;
+    biografia: string;
+    fotoCapa?: string; 
+}
 
-const TelaForm = ({ route, navigation }) => {
-    const [livro, setLivro] = useState(route.params ? route.params : {});
+interface TelaFormProps {
+    route: RouteProp<{ params: { livro?: Livro } }, 'params'>;
+    navigation: any; 
+}
+
+const TelaForm: React.FC<TelaFormProps> = ({ route, navigation }) => {
+    const { livro } = route.params ?? {};
+    const { adicionarLivro, editarLivro } = useContext(LivrariaContext);
+    const [livroAtual, setLivroAtual] = useState<Livro | undefined>(livro);
+
+    const salvarLivro = () => {
+        if (!livroAtual?.id) {
+            const livroComFotoCapa = { ...livroAtual, fotoCapa: null };
+            adicionarLivro(livroComFotoCapa);
+        } else {
+            const fotoCapa = livroAtual?.fotoCapa || '';
+            const livroComFotoCapa = { ...livroAtual, fotoCapa };
+            editarLivro(livroComFotoCapa);
+        }
+        navigation.goBack();
+    };
+    
 
     return (
         <View style={styles.container}>
             <Text style={styles.label}>Título</Text>
             <TextInput
                 style={styles.input}
-                value={livro.titulo}
-                onChangeText={(text) => setLivro({ ...livro, titulo: text })}
+                value={livroAtual?.titulo || ''}
+                onChangeText={(text) => setLivroAtual({ ...livroAtual, titulo: text })}
             />
             <Text style={styles.label}>Autor</Text>
             <TextInput
                 style={styles.input}
-                value={livro.autor}
-                onChangeText={(text) => setLivro({ ...livro, autor: text })}
+                value={livroAtual?.autor || ''}
+                onChangeText={(text) => setLivroAtual({ ...livroAtual, autor: text })}
             />
             <Text style={styles.label}>Biografia</Text>
             <TextInput
                 style={[styles.input, styles.biografiaInput]}
                 multiline
-                value={livro.biografia}
-                onChangeText={(text) => setLivro({ ...livro, biografia: text })}
+                value={livroAtual?.biografia || ''}
+                onChangeText={(text) => setLivroAtual({ ...livroAtual, biografia: text })}
             />
             <Button
                 title="SALVAR"
-                onPress={() => {
-                    navigation.goBack();
-                }}
+                onPress={salvarLivro}
             />
         </View>
     );
