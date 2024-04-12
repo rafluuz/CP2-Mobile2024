@@ -1,5 +1,6 @@
-// LivrariaContext.tsx
-import React, { createContext, useState, ReactNode } from "react";
+// LivrariaProvider.tsx
+import React, { createContext, useState, useEffect, ReactNode } from "react";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import DadosLivro from "../dados/DadosLivro";
 
 interface Livro {
@@ -25,18 +26,38 @@ export const LivrariaContext = createContext<LivrariaContextType>({
 });
 
 export const LivrariaProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [livros, setLivros] = useState<Livro[]>(DadosLivro);
+    const [livros, setLivros] = useState<Livro[]>([]);
 
-    const adicionarLivro = (livro: Livro) => {
-        setLivros([...livros, livro]);
+    useEffect(() => {
+        const carregarLivros = async () => {
+            const dadosArmazenados = await AsyncStorage.getItem('@livros');
+            if (dadosArmazenados) {
+                setLivros(JSON.parse(dadosArmazenados));
+            } else {
+                // Se não há dados armazenados, inicialize com dados padrão
+                setLivros(DadosLivro);
+                await AsyncStorage.setItem('@livros', JSON.stringify(DadosLivro));
+            }
+        };
+        carregarLivros();
+    }, []);
+
+    const adicionarLivro = async (livro: Livro) => {
+        const novosLivros = [...livros, livro];
+        await AsyncStorage.setItem('@livros', JSON.stringify(novosLivros));
+        setLivros(novosLivros);
     };
 
-    const editarLivro = (livroEditado: Livro) => {
-        setLivros(livros.map(livro => (livro.id === livroEditado.id ? livroEditado : livro)));
+    const editarLivro = async (livroEditado: Livro) => {
+        const livrosAtualizados = livros.map(livro => livro.id === livroEditado.id ? livroEditado : livro);
+        await AsyncStorage.setItem('@livros', JSON.stringify(livrosAtualizados));
+        setLivros(livrosAtualizados);
     };
 
-    const excluirLivro = (livroId: number) => {
-        setLivros(livros.filter(livro => livro.id !== livroId));
+    const excluirLivro = async (livroId: number) => {
+        const livrosAtualizados = livros.filter(livro => livro.id !== livroId);
+        await AsyncStorage.setItem('@livros', JSON.stringify(livrosAtualizados));
+        setLivros(livrosAtualizados);
     };
 
     return (

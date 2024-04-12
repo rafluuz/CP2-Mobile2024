@@ -26,11 +26,17 @@ const TelaList = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
+                <Button
+        title="Sobre os Membros"
+        onPress={() => navigation.navigate('MembrosDupla')}
+        buttonStyle={{ backgroundColor: '#ff698f', marginBottom: 10 }}
+    />
             <FlatList
                 data={livros}
                 keyExtractor={(item) => (item && item.id ? item.id.toString() : "")}
                 renderItem={({ item }) => (
                     <ListItem onPress={() => navigation.navigate("TelaForm", { livro: item })}>
+                        <ListItem.Chevron onPress={() => navigation.navigate('TelaDetalhes', { livroId: item.id })} size={30} />
                         <Image source={{ uri: item.fotoCapa }} style={{ width: 100, height: 150, marginRight: 10 }} />
                         <ListItem.Content>
                             <ListItem.Title>{item.titulo}</ListItem.Title>
