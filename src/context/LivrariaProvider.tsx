@@ -1,4 +1,3 @@
-// LivrariaProvider.tsx
 import React, { createContext, useState, useEffect, ReactNode } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DadosLivro from "../dados/DadosLivro";
@@ -34,7 +33,6 @@ export const LivrariaProvider: React.FC<{ children: ReactNode }> = ({ children }
             if (dadosArmazenados) {
                 setLivros(JSON.parse(dadosArmazenados));
             } else {
-                // Se não há dados armazenados, inicialize com dados padrão
                 setLivros(DadosLivro);
                 await AsyncStorage.setItem('@livros', JSON.stringify(DadosLivro));
             }
