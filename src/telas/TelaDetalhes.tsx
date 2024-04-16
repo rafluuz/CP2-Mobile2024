@@ -1,4 +1,3 @@
-// src/telas/TelaDetalhes.tsx
 import React, { useContext } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView } from 'react-native';
 import { LivrariaContext } from '../context/LivrariaProvider';
